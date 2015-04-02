@@ -14,42 +14,50 @@ public class Tweet {
 	private String consumerKey="";
 	private String consumerSecret="";
 	private Twitter twitter = new TwitterFactory().getInstance();
-	public void init(){
-		initC();
-		initA();
+	public Tweet(){
+		
 	}
-	public void initA(){
+	public Tweet(String consumerKey,String consumerSecret){
+		this.consumerKey=consumerKey;
+		this.consumerSecret=consumerSecret;
+		twitter.setOAuthConsumer(consumerKey,consumerSecret);
+	}
+	public void setConsumer(String consumerKey,String consumerSecret){
+		this.consumerKey=consumerKey;
+		this.consumerSecret=consumerSecret;
+		twitter.setOAuthConsumer(consumerKey,consumerSecret);
+	}
+	public void setAccessToken(String accessToken,String accessTokenSecret){
+		this.accessToken=accessToken;
+		this.accessTokenSecret=accessTokenSecret;
 		twitter.setOAuthAccessToken(new AccessToken(accessToken,accessTokenSecret));
 	}
-	public void initC(){
-		twitter.setOAuthConsumer(consumerKey, consumerSecret);
+	public void init(){
+		twitter.setOAuthConsumer(consumerKey,consumerSecret);
+		twitter.setOAuthAccessToken(new AccessToken(accessToken, accessTokenSecret));
 	}
 	public void tweet(String tweet){
 		try{
 			twitter.updateStatus(tweet);
 			System.out.println("ツイートした");
-			//UserStreamTest.tl.add(tweet);
 		} catch(TwitterException e){
 			System.err.println("ツイート失敗"+e.getMessage());
 			if(e.getErrorCode()==187){
 				tweet+=" !";
 				tweet(tweet);
 			}
-			//initA();
 		}
 	}
 	public void reply(String tweet,Status status){
 		try{
 			twitter.updateStatus(new StatusUpdate(tweet).inReplyToStatusId(status.getId()));
 			System.out.println("返信した");
-			//UserStreamTest.tl.add(tweet);
 		} catch(TwitterException e){
 			System.err.println("返信失敗"+e.getMessage());
 			if(e.getErrorCode()==187){
 				tweet+=" !";
 				reply(tweet,status);
 			}
-			//init();
 		}
 	}
 	public boolean follow(long userId) {
@@ -62,7 +70,6 @@ public class Tweet {
 		} finally {
 			if(user == null) {
 				System.out.println(userId+"のフォローに失敗しました");
-				initA();
 				v=false; 
 			} else {
 				System.out.println(user.getName()+"をフォローしました");
@@ -81,7 +88,6 @@ public class Tweet {
 		} finally {
 			if(user == null){ 
 				System.out.println(userId+"のフォロー解除に失敗しました");
-				initA();
 				v=false;
 			}else{
 				System.out.println(user.getName()+"をフォロー解除しました");
@@ -106,7 +112,6 @@ public class Tweet {
 		} finally {
 			if(user==null){
 				System.out.println("プロフィール更新に失敗しました");
-				initA();
 				v=false;
 			}else{
 				System.out.println("プロフィールを更新しました");
@@ -126,7 +131,6 @@ public class Tweet {
 		} finally {
 			if(user==null){
 				System.out.println("プロフィール更新に失敗しました");
-				initA();
 				v=false;
 			}else{
 				System.out.println("プロフィールを更新しました");
@@ -145,7 +149,6 @@ public class Tweet {
 		} finally {
 			if(status==null){
 				System.out.println("お気に入り登録に失敗しました");
-				initA();
 				v=false;
 			} else {
 				System.out.println("お気に入りに登録しました");
@@ -164,7 +167,6 @@ public class Tweet {
 		} finally {
 			if(status==null){
 				System.out.println("リツイートに失敗しました");
-				initA();
 				v=false;
 			} else {
 				System.out.println("リツイートしました");

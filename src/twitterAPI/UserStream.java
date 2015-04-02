@@ -6,18 +6,40 @@ import twitter4j.*;
 import twitter4j.auth.AccessToken;
 
 public class UserStream{
+	TwitterStream twitterStream=new TwitterStreamFactory().getInstance();
 	private String consumerKey="";
 	private String consumerSecret="";
 	private String accessToken="";
 	private String accessTokenSecret="";
-	public void run() throws TwitterException, IOException{
-	    TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
-	    twitterStream.setOAuthConsumer(consumerKey, consumerSecret);
+	public UserStream(){
+		
+	}
+	public UserStream(String consumerKey,String consumerSecret){
+		this.consumerKey=consumerKey;
+		this.consumerSecret=consumerSecret;
+		twitterStream.setOAuthConsumer(consumerKey, consumerSecret);
+	}
+	public void setConsumer(String consumerKey,String consumerSecret){
+		this.consumerKey=consumerKey;
+		this.consumerSecret=consumerSecret;
+		twitterStream.setOAuthConsumer(consumerKey,consumerSecret);
+	}
+	public void setAccessToken(String accessToken,String accessTokenSecret){
+		this.accessToken=accessToken;
+		this.accessTokenSecret=accessTokenSecret;
 		twitterStream.setOAuthAccessToken(new AccessToken(accessToken,accessTokenSecret));
-	    twitterStream.addListener(listener);
+	}
+	public void addListener(UserStreamListener listener){
+		twitterStream.addListener(listener);
+	}
+	public void run() throws TwitterException, IOException{
 	    twitterStream.user();
 	}
-	private final UserStreamListener listener = new UserStreamListener(){
+	public void init(){
+		twitterStream.setOAuthConsumer(consumerKey, consumerSecret);
+		twitterStream.setOAuthAccessToken(new AccessToken(accessToken,accessTokenSecret));
+	}
+	public static final UserStreamListener sampleListener = new UserStreamListener(){
 		@Override
         public void onStatus(Status status) {
             System.out.println(status.getUser().getName()+" / @" + status.getUser().getScreenName() + " : " + status.getText());
