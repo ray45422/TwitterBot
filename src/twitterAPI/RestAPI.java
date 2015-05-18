@@ -7,17 +7,17 @@ import twitter4j.*;
 import twitter4j.auth.AccessToken;
 
 
-public class Tweet {
+public class RestAPI {
 	private String screenName="";
 	private String accessToken="";
 	private String accessTokenSecret="";
 	private String consumerKey="";
 	private String consumerSecret="";
 	private Twitter twitter = new TwitterFactory().getInstance();
-	public Tweet(){
+	public RestAPI(){
 		
 	}
-	public Tweet(String consumerKey,String consumerSecret){
+	public RestAPI(String consumerKey,String consumerSecret){
 		this.consumerKey=consumerKey;
 		this.consumerSecret=consumerSecret;
 		twitter.setOAuthConsumer(consumerKey,consumerSecret);
